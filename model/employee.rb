@@ -10,7 +10,7 @@ end
 class SerializableEvent < SimpleEventSourcing::Events::Event
 
   def serialize
-    {"aggregate_id" => aggregate_id, "occured_on" => occured_on }
+    {"aggregate_id" => aggregate_id, "occurred_on" => occurred_on }
   end
 
 end
@@ -64,6 +64,18 @@ class CongratulateEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscri
 
 end
 
+class WelcomeEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
+
+  def is_subscribet_to?(event)
+    event.class == NewEmployeeIsHiredEvent
+  end
+
+  def handle(event)
+    puts "Wellcome  #{event.name}!!!!"
+  end
+
+end
+
 
 class Employee
 
@@ -78,8 +90,8 @@ class Employee
     end
   end
 
-  def add_raise(amount)
-    @salary += amount
+  def salary=(new_salary)
+    apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
 
 
@@ -104,9 +116,4 @@ class Employee
 
   end
 
-  private
-
-    def salary=(new_salary)
-      apply_record_event SalaryHasChangedEvent , new_salary: new_salary
-    end
 end
