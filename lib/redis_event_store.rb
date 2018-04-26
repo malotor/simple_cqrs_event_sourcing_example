@@ -66,7 +66,6 @@ class RedisEventStore < SimpleEventSourcing::Events::EventStore
 
   def get_history(aggregate_id)
     stored_events_json = @redis.lrange( aggregate_id, 0, -1 )
-
     history = SimpleEventSourcing::AggregateRoot::History.new(aggregate_id)
     stored_events_json.each do |stored_event_json|
       stored_event =  SimpleEventSourcing::Events::StoredEvent.create_from_json stored_event_json

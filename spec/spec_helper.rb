@@ -17,6 +17,7 @@
 
 require_relative '../model/employee'
 require_relative '../model/employee_repository'
+require_relative './support/dummy'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
