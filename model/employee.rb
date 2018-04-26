@@ -94,6 +94,9 @@ class Employee
     apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
 
+  def id
+    aggregate_id.to_s
+  end
 
   on NewEmployeeIsHiredEvent do |event|
     @name = event.name
@@ -105,15 +108,15 @@ class Employee
     @salary = event.new_salary
   end
 
-  def save
-
-    client = RedisEventStore::Client.new
-
-    publish_events do |event|
-      client.commit event
-      SimpleEventSourcing::Events::EventDispatcher.publish(event)
-    end
-
-  end
+  # def save
+  #
+  #   client = RedisEventStore.new(RedisClient.get_client)
+  #
+  #   publish_events do |event|
+  #     client.commit event
+  #     SimpleEventSourcing::Events::EventDispatcher.publish(event)
+  #   end
+  #
+  # end
 
 end

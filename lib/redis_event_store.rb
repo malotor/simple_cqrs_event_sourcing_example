@@ -2,8 +2,8 @@ require 'simple_event_sourcing'
 require 'redis'
 require 'json'
 
-module RedisEventStore
 
+module RedisClient
   class << self
     attr_writer :configuration
   end
@@ -21,73 +21,81 @@ module RedisEventStore
   end
 
   class Configuration
-    attr_accessor :host,:port,:client
+    attr_accessor :host,:port,:mock
 
     def initialize
       @host ='localhost'
       @port = 6379
-      @client = nil
+      @mock = false
     end
   end
 
 
-  class Client < SimpleEventSourcing::Events::EventStore
-
-    def initialize(client = nil)
-      if  RedisEventStore.configuration.client.nil?
-        @redis = Redis.new(
-          host: RedisEventStore.configuration.host,
-          port: RedisEventStore.configuration.port
-        )
-      else
-        @redis = RedisEventStore.configuration.client
-      end
-    end
-
-    def commit(event)
-
-      stored_event = SimpleEventSourcing::Events::StoredEvent.new(
-        aggregate_id: event.aggregate_id.to_s,
-        occurred_on: Time.now.getlocal("+02:00").to_i,
-        event_type: event.class.name,
-        event_data: event.to_json
+  def self.get_client
+    if @configuration.mock
+      return RedisMock.new
+    else
+      return Redis.new(
+        host: @configuration.host,
+        port: @configuration.port
       )
-
-      @redis.rpush( event.aggregate_id, stored_event.to_json )
-
     end
+  end
 
-    def get_history(aggregate_id)
-      stored_events_json = @redis.lrange( aggregate_id, 0, -1 )
-      history = SimpleEventSourcing::AggregateRoot::History.new(aggregate_id)
-      stored_events_json.each do |stored_event_json|
-        stored_event =  SimpleEventSourcing::Events::StoredEvent.create_from_json stored_event_json
-        event = Object.const_get(stored_event.event_type)
-        args = JSON.parse(stored_event.event_data)
-        args.keys.each do |key|
-          args[(key.to_sym rescue key) || key] = args.delete(key)
-        end
-        recovered_event = event.new(args)
-        history << recovered_event
-      end
-      history
-    end
+end
+
+
+class RedisEventStore < SimpleEventSourcing::Events::EventStore
+
+  def initialize(client)
+    @redis = client
+  end
+
+  def commit(event)
+
+    stored_event = SimpleEventSourcing::Events::StoredEvent.new(
+      aggregate_id: event.aggregate_id.to_s,
+      occurred_on: Time.now.getlocal("+02:00").to_i,
+      event_type: event.class.name,
+      event_data: event.to_json
+    )
+
+    @redis.rpush(event.aggregate_id.to_s, stored_event.to_json )
 
   end
 
-  class RedisMock
-    attr_reader :entries
+  def get_history(aggregate_id)
+    stored_events_json = @redis.lrange( aggregate_id, 0, -1 )
 
-    def initialize
-      @entries = Hash.new()
+    history = SimpleEventSourcing::AggregateRoot::History.new(aggregate_id)
+    stored_events_json.each do |stored_event_json|
+      stored_event =  SimpleEventSourcing::Events::StoredEvent.create_from_json stored_event_json
+      event = Object.const_get(stored_event.event_type)
+      args = JSON.parse(stored_event.event_data)
+      args.keys.each do |key|
+        args[(key.to_sym rescue key) || key] = args.delete(key)
+      end
+      recovered_event = event.new(args)
+      history << recovered_event
     end
-    def rpush(key, value)
-      puts "#{key} => #{value}"
-      @entries[key] ||= []
-      @entries[key] << value
-    end
-    def lrange(key,inf,max)
-      return @entries[key]
-    end
+    history
+  end
+
+end
+
+
+class RedisMock
+  attr_reader :entries
+
+  def initialize
+    @entries = Hash.new()
+  end
+  def rpush(key, value)
+    @entries[key] ||= []
+    @entries[key] << value
+  end
+  def lrange(key,inf,max)
+    @entries[key] ||= []
+    return @entries[key]
   end
 end

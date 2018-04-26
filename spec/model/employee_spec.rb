@@ -26,7 +26,7 @@ RSpec.describe "An employee" do
   end
 
   it 'could have a raise' do
-    @fred.add_raise 5000
+    @fred.salary = 35000
     expect(@fred.salary).to eq 35000
   end
 
