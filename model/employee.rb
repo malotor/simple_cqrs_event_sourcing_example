@@ -1,21 +1,7 @@
 require 'simple_event_sourcing'
-require_relative '../lib/redis_event_store'
 
-class EmployeeStreamEvents < SimpleEventSourcing::AggregateRoot::History
-  def get_aggregate_class
-    Employee
-  end
-end
 
-class SerializableEvent < SimpleEventSourcing::Events::Event
-
-  def serialize
-    {"aggregate_id" => aggregate_id, "occurred_on" => occurred_on }
-  end
-
-end
-
-class NewEmployeeIsHiredEvent < SerializableEvent
+class NewEmployeeIsHiredEvent < SimpleEventSourcing::Events::Event
   attr_reader :name, :title, :salary
 
   def initialize(args)
@@ -29,13 +15,9 @@ class NewEmployeeIsHiredEvent < SerializableEvent
     super.merge("name" => name, "title" => title , "salary" => salary )
   end
 
-  def to_json(*a)
-    serialize.to_json(*a)
-  end
-
 end
 
-class SalaryHasChangedEvent  < SerializableEvent
+class SalaryHasChangedEvent  < SimpleEventSourcing::Events::Event
   attr_reader  :new_salary
 
   def initialize(args)
@@ -47,9 +29,6 @@ class SalaryHasChangedEvent  < SerializableEvent
     super.merge("new_salary" => new_salary)
   end
 
-  def to_json(*a)
-    serialize.to_json(*a)
-  end
 end
 
 class CongratulateEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
@@ -107,16 +86,5 @@ class Employee
   on SalaryHasChangedEvent do |event|
     @salary = event.new_salary
   end
-
-  # def save
-  #
-  #   client = RedisEventStore.new(RedisClient.get_client)
-  #
-  #   publish_events do |event|
-  #     client.commit event
-  #     SimpleEventSourcing::Events::EventDispatcher.publish(event)
-  #   end
-  #
-  # end
 
 end

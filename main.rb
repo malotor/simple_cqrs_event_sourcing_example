@@ -1,16 +1,20 @@
 require_relative './model/employee'
 require_relative './model/employee_repository'
-require_relative './lib/redis_event_store'
-# 
-# RedisClient.configure do |config|
-#   config.host = 'redis'
-# end
 
-RedisClient.configure do |config|
-  config.mock = true
+
+SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
+ config.host = 'redis'
 end
 
-employee_repository = EmployeeRepository.new(RedisEventStore.new(RedisClient.get_client))
+# RedisClient.configure do |config|
+#   config.mock = true
+# end
+
+employee_repository = EmployeeRepository.new(
+  SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
+    SimpleEventSourcing::Events::EventStore::RedisClient.get_client
+  )
+)
 
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(WelcomeEmployeeSubscriber.new)
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(CongratulateEmployeeSubscriber.new)

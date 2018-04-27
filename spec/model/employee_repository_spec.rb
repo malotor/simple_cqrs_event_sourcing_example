@@ -1,6 +1,6 @@
 RSpec.describe "An employee repository" do
 
-  RedisClient.configure do |config|
+  SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
     config.mock = true
   end
 
@@ -9,7 +9,11 @@ RSpec.describe "An employee repository" do
   before(:each) do
     @fred = Employee.new(name: "Fred Flintstone", title: "Crane Operator", salary: 30000.0)
     @fred.salary = 35000
-    @employee_repository = EmployeeRepository.new(RedisEventStore.new(RedisClient.get_client))
+    @employee_repository = EmployeeRepository.new(
+      SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
+        SimpleEventSourcing::Events::EventStore::RedisClient.get_client
+      )
+    )
     @subscribers = []
     @subscribers << spy(:spy_subscriber)
     @subscribers.each do |s|
