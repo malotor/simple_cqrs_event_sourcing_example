@@ -7,7 +7,7 @@ RSpec.describe "An employee repository" do
   let(:spy_subscriber) { @subscribers[0] }
 
   before(:each) do
-    @fred = Employee.new(name: "Fred Flintstone", title: "Crane Operator", salary: 30000.0)
+    @fred = Employee.create("Fred Flintstone","Crane Operator",30000.0)
     @fred.salary = 35000
     @employee_repository = EmployeeRepository.new(
       SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
@@ -30,7 +30,7 @@ RSpec.describe "An employee repository" do
   it 'recoveres an employee from its id' do
     @employee_repository.save @fred
 
-    recovered_employee = @employee_repository.findById @fred.id
+    recovered_employee = @employee_repository.findById @fred.aggregate_id.to_s
 
     expect(recovered_employee.name).to eq "Fred Flintstone"
     expect(recovered_employee.title).to eq "Crane Operator"
@@ -40,7 +40,7 @@ RSpec.describe "An employee repository" do
 
     @employee_repository.save recovered_employee
 
-    second_recovered_employee = @employee_repository.findById recovered_employee.id
+    second_recovered_employee = @employee_repository.findById recovered_employee.aggregate_id.to_s
 
     expect(second_recovered_employee.name).to eq "Fred Flintstone"
     expect(second_recovered_employee.title).to eq "Crane Operator"

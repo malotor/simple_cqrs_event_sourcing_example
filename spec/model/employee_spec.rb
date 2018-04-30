@@ -1,7 +1,7 @@
 RSpec.describe "An employee" do
 
   before(:each) do
-    @fred = Employee.new(name: "Fred Flintstone", title: "Crane Operator", salary: 30000.0)
+    @fred = Employee.create( "Fred Flintstone", "Crane Operator", 30000.0)
 
     @subscribers = []
     @subscribers << spy(:spy_subscriber)

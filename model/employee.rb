@@ -62,19 +62,14 @@ class Employee
 
   attr_reader :name, :title, :salary
 
-  def initialize(args = nil )
-    super
-    unless args.nil?
-      apply_record_event  NewEmployeeIsHiredEvent , name: args[:name],  title: args[:title], salary: args[:salary]
-    end
-  end
-
   def salary=(new_salary)
     apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
 
-  def id
-    aggregate_id.to_s
+  def self.create(name,title,salary)
+    employee = new
+    employee.apply_record_event  NewEmployeeIsHiredEvent,name: name,title: title, salary: salary
+    employee
   end
 
   on NewEmployeeIsHiredEvent do |event|

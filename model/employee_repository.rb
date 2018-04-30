@@ -6,7 +6,7 @@ class EmployeeRepository
   end
 
   def save(employee)
-    employee.events.each do |event|
+    employee.publish.each do |event|
       @event_store.commit event
       SimpleEventSourcing::Events::EventDispatcher.publish(event)
     end
