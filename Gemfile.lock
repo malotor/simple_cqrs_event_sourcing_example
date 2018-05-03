@@ -16,7 +16,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
-    simple_event_sourcing (0.8.0)
+    simple_event_sourcing (1.0.0)
+      redis
 
 PLATFORMS
   ruby
@@ -24,7 +25,7 @@ PLATFORMS
 DEPENDENCIES
   redis
   rspec
-  simple_event_sourcing (~> 0.8.0)
+  simple_event_sourcing (~> 1.0.0)
 
 BUNDLED WITH
    1.16.1

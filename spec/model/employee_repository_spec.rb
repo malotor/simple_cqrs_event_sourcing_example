@@ -1,5 +1,4 @@
-RSpec.describe "An employee repository" do
-
+RSpec.describe 'An employee repository' do
   SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
     config.mock = true
   end
@@ -7,8 +6,8 @@ RSpec.describe "An employee repository" do
   let(:spy_subscriber) { @subscribers[0] }
 
   before(:each) do
-    @fred = Employee.new(name: "Fred Flintstone", title: "Crane Operator", salary: 30000.0)
-    @fred.salary = 35000
+    @fred = Employee.create('Fred Flintstone', 'Crane Operator', 30_000.0)
+    @fred.salary = 35_000
     @employee_repository = EmployeeRepository.new(
       SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
         SimpleEventSourcing::Events::EventStore::RedisClient.get_client
@@ -32,27 +31,24 @@ RSpec.describe "An employee repository" do
 
     recovered_employee = @employee_repository.findById @fred.id
 
-    expect(recovered_employee.name).to eq "Fred Flintstone"
-    expect(recovered_employee.title).to eq "Crane Operator"
-    expect(recovered_employee.salary).to eq 35000
+    expect(recovered_employee.name).to eq 'Fred Flintstone'
+    expect(recovered_employee.title).to eq 'Crane Operator'
+    expect(recovered_employee.salary).to eq 35_000
 
-    recovered_employee.salary = 40000
+    recovered_employee.salary = 40_000
 
     @employee_repository.save recovered_employee
 
     second_recovered_employee = @employee_repository.findById recovered_employee.id
 
-    expect(second_recovered_employee.name).to eq "Fred Flintstone"
-    expect(second_recovered_employee.title).to eq "Crane Operator"
-    expect(second_recovered_employee.salary).to eq 40000
-
+    expect(second_recovered_employee.name).to eq 'Fred Flintstone'
+    expect(second_recovered_employee.title).to eq 'Crane Operator'
+    expect(second_recovered_employee.salary).to eq 40_000
   end
 
   it 'dispatch employee recorded events to their subscribers' do
     @employee_repository.save @fred
     expect(spy_subscriber).to have_received(:handle).with(instance_of(NewEmployeeIsHiredEvent)).ordered
     expect(spy_subscriber).to have_received(:handle).with(instance_of(SalaryHasChangedEvent)).ordered
-
   end
-
 end

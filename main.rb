@@ -1,9 +1,8 @@
 require_relative './model/employee'
 require_relative './model/employee_repository'
 
-
 SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
- config.host = 'redis'
+  config.host = 'redis'
 end
 
 # RedisClient.configure do |config|
@@ -19,11 +18,11 @@ employee_repository = EmployeeRepository.new(
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(WelcomeEmployeeSubscriber.new)
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(CongratulateEmployeeSubscriber.new)
 
-fred = Employee.new(name: "Fred Flintstone", title: "Crane Operator", salary: 30000.0)
-fred.salary=35000.0
+fred = Employee.create('Fred Flintstone', 'Crane Operator', 30_000.0)
+fred.salary = 35_000.0
 employee_repository.save fred
 
-barney = Employee.new(name:"Barney Rubble", title:  "Crane Operator",  salary: 10000.0)
+barney = Employee.new('Barney Rubble', 'Crane Operator', 10_000.0)
 employee_repository.save barney
 
 new_fred = employee_repository.findById fred.id
