@@ -1,6 +1,5 @@
 require 'simple_event_sourcing'
 
-
 class NewEmployeeIsHiredEvent < SimpleEventSourcing::Events::Event
   attr_reader :name, :title, :salary
 
@@ -12,13 +11,12 @@ class NewEmployeeIsHiredEvent < SimpleEventSourcing::Events::Event
   end
 
   def serialize
-    super.merge("name" => name, "title" => title , "salary" => salary )
+    super.merge('name' => name, 'title' => title, 'salary' => salary)
   end
-
 end
 
-class SalaryHasChangedEvent  < SimpleEventSourcing::Events::Event
-  attr_reader  :new_salary
+class SalaryHasChangedEvent < SimpleEventSourcing::Events::Event
+  attr_reader :new_salary
 
   def initialize(args)
     @new_salary = args[:new_salary]
@@ -26,13 +24,11 @@ class SalaryHasChangedEvent  < SimpleEventSourcing::Events::Event
   end
 
   def serialize
-    super.merge("new_salary" => new_salary)
+    super.merge('new_salary' => new_salary)
   end
-
 end
 
 class CongratulateEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
-
   def is_subscribet_to?(event)
     event.class == SalaryHasChangedEvent
   end
@@ -40,11 +36,9 @@ class CongratulateEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscri
   def handle(event)
     puts "Cogratulations for your new salary => #{event.new_salary}!!!!"
   end
-
 end
 
 class WelcomeEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
-
   def is_subscribet_to?(event)
     event.class == NewEmployeeIsHiredEvent
   end
@@ -52,16 +46,16 @@ class WelcomeEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
   def handle(event)
     puts "Wellcome  #{event.name}!!!!"
   end
-
 end
 
-
 class Employee
-
   include SimpleEventSourcing::AggregateRoot::Base
+
+  private_class_method :new
 
   attr_reader :name, :title, :salary
 
+<<<<<<< 28075cfb85c4933238397199da9c3c3b59755a1c
   def salary=(new_salary)
     apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
@@ -70,6 +64,17 @@ class Employee
     employee = new
     employee.apply_record_event  NewEmployeeIsHiredEvent,name: name,title: title, salary: salary
     employee
+=======
+  def self.create(name, title, salary)
+    employee = new
+    employee.aggregate_id = SimpleEventSourcing::Id::UUIDId.generate
+    employee.apply_record_event NewEmployeeIsHiredEvent, name: name, title: title, salary: salary
+    employee
+  end
+
+  def salary=(new_salary)
+    apply_record_event SalaryHasChangedEvent, new_salary: new_salary
+>>>>>>> Adapt to version 1.0.0
   end
 
   on NewEmployeeIsHiredEvent do |event|
@@ -81,5 +86,4 @@ class Employee
   on SalaryHasChangedEvent do |event|
     @salary = event.new_salary
   end
-
 end

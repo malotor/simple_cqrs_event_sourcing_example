@@ -14,6 +14,6 @@ class EmployeeRepository
 
   def findById(id)
     history = @event_store.get_history id
-    return Employee.create_from_history history
+    Employee.create_from_history history
   end
 end
