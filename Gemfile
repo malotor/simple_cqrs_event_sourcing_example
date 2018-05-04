@@ -7,3 +7,5 @@ gem 'simple_event_sourcing', '~> 1.0.0'
 >>>>>>> Adapt to version 1.0.0
 gem 'rspec'
 gem 'redis'
+gem 'pry'
+gem 'pry-byebug'
