@@ -14,12 +14,24 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
+require 'rspec'
+require 'rack/test'
+
 
 require_relative '../model/employee'
 require_relative '../model/employee_repository'
 
+require File.expand_path '../../app.rb', __FILE__
+
+module RSpecMixin
+  include Rack::Test::Methods
+  def app() MyApp end
+end
 
 RSpec.configure do |config|
+
+  config.include RSpecMixin
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

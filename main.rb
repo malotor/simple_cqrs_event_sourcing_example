@@ -1,5 +1,8 @@
+require 'sqlite3'
 require_relative './model/employee'
 require_relative './model/employee_repository'
+require_relative './model/employee_view'
+require_relative './model/employee_view_repository'
 
 SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
   config.host = 'redis'
@@ -8,6 +11,24 @@ end
 # RedisClient.configure do |config|
 #   config.mock = true
 # end
+
+
+#!/usr/bin/ruby
+begin
+
+    db = SQLite3::Database.open "employee.db"
+    puts db.get_first_value 'SELECT SQLITE_VERSION()'
+
+rescue SQLite3::Exception => e
+
+    puts "Exception occurred"
+    puts e
+
+ensure
+    db.close if db
+end
+
+employee_view_repository = EmployeeViewRepository.new(db)
 
 employee_repository = EmployeeRepository.new(
   SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
