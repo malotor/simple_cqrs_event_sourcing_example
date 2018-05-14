@@ -79,4 +79,8 @@ class Employee
   on SalaryHasChangedEvent do |event|
     @salary = event.new_salary
   end
+
+  def to_json
+    { name: @name, title: @title, salary: @salary }.to_json
+  end
 end
