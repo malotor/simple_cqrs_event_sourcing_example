@@ -59,6 +59,10 @@ class Employee
     apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
 
+  def self.generate_id(id)
+    SimpleEventSourcing::Id::UUIDId.new id
+  end
+
   def self.create(name,title,salary)
     employee = new
     employee.aggregate_id = SimpleEventSourcing::Id::UUIDId.generate
