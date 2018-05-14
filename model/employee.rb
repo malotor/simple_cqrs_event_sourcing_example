@@ -55,26 +55,15 @@ class Employee
 
   attr_reader :name, :title, :salary
 
-<<<<<<< 28075cfb85c4933238397199da9c3c3b59755a1c
   def salary=(new_salary)
     apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
 
   def self.create(name,title,salary)
     employee = new
-    employee.apply_record_event  NewEmployeeIsHiredEvent,name: name,title: title, salary: salary
-    employee
-=======
-  def self.create(name, title, salary)
-    employee = new
     employee.aggregate_id = SimpleEventSourcing::Id::UUIDId.generate
     employee.apply_record_event NewEmployeeIsHiredEvent, name: name, title: title, salary: salary
     employee
-  end
-
-  def salary=(new_salary)
-    apply_record_event SalaryHasChangedEvent, new_salary: new_salary
->>>>>>> Adapt to version 1.0.0
   end
 
   on NewEmployeeIsHiredEvent do |event|
