@@ -1,4 +1,5 @@
 require 'simple_event_sourcing'
+require 'json'
 
 class NewEmployeeIsHiredEvent < SimpleEventSourcing::Events::Event
   attr_reader :name, :title, :salary

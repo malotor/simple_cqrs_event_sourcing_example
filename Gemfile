@@ -7,8 +7,9 @@ gem 'pry'
 gem 'pry-byebug'
 
 gem 'sinatra'
-gem 'rack-test'
+
 gem 'sqlite3'
+gem 'activerecord'
 
 group :development do
     gem 'rake' # to apply migrations
@@ -19,7 +20,7 @@ group :development do
 end
 
 group :development,:test do
-
+    gem 'rack-test'
     gem 'capybara'
     gem 'rspec'
 end
