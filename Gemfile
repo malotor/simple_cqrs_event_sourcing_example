@@ -1,22 +1,22 @@
 source 'https://rubygems.org'
 
-gem 'simple_event_sourcing', '~> 1.0.1'
-
-gem 'redis'
-gem 'pry'
-gem 'pry-byebug'
-
 gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'sinatra-activerecord'
+gem 'simple_event_sourcing', '~> 1.0.1'
+gem 'bundler'
+gem 'redis'
+gem 'pg'
 
-gem 'sqlite3'
-gem 'activerecord'
 
 group :development do
-    gem 'rake' # to apply migrations
+    gem 'pry'
+    gem 'pry-byebug'
     gem 'thin'
     gem 'shotgun'
     gem 'tux'
-    gem 'sinatra-advanced-routes'
+    gem "sqlite3"
+    gem "rake"
 end
 
 group :development,:test do

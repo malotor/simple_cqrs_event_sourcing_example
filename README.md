@@ -6,5 +6,7 @@ This is a example of how to use the Simple Event Sourcing gem [https://rubygems.
 
     $ docker-compose build
     $ docker-compose up -d
-    $ sh ./run.sh rspec
-    $ sh ./run.sh ruby main.rb
+    $ bundle exec rake db:migrate
+    $ rspec
+    $ rake -T
+    $ tux

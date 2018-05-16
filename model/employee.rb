@@ -29,13 +29,32 @@ class SalaryHasChangedEvent < SimpleEventSourcing::Events::Event
   end
 end
 
+
+class ProjectorEmployeeEventSubscriber < SimpleEventSourcing::Events::EventSubscriber
+
+  def is_subscribet_to?(event)
+    true
+  end
+
+  def handle(event)
+    #logger.info "hoo"
+    db = SQLite3::Database.open "db/development.sqlite3"
+    case event.class
+    when NewEmployeeIsHiredEvent
+      db.execute("INSERT INTO employee_views(uuid, name, title , salary) VALUES (?,?,?,?)", [event.aggregate_id, event.name, event.title, event.salary.to_i])
+    when SalaryHasChangedEvent
+      db.execute("UPDATE employee_views SET salary = ?  WHERE uuid = ?", [event.new_salary.to_i, event.aggregate_id])
+    end
+  end
+end
+
 class CongratulateEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
   def is_subscribet_to?(event)
     event.class == SalaryHasChangedEvent
   end
 
   def handle(event)
-    puts "Cogratulations for your new salary => #{event.new_salary}!!!!"
+    #puts "Cogratulations for your new salary => #{event.new_salary}!!!!"
   end
 end
 
@@ -45,7 +64,7 @@ class WelcomeEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
   end
 
   def handle(event)
-    puts "Wellcome  #{event.name}!!!!"
+    #puts "Wellcome  #{event.name}!!!!"
   end
 end
 

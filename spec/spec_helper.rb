@@ -16,12 +16,14 @@
 
 require 'rspec'
 require 'rack/test'
-
+require 'bundler/setup'
 
 require_relative '../model/employee'
 require_relative '../model/employee_repository'
 
 require File.expand_path '../../app.rb', __FILE__
+
+Sinatra::Application.environment = :test
 
 module RSpecMixin
   include Rack::Test::Methods
