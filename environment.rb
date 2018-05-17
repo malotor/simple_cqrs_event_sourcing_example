@@ -24,6 +24,8 @@ Bundler.require(:default, Sinatra::Application.environment)
 #logger = Logger.new(STDOUT)
 
 
+
+# Log
 Dir.mkdir("log") unless File.exist?("log")
 logger = File.new("log/#{settings.environment}.log", 'a+')
 logger.sync = true
@@ -32,24 +34,27 @@ configure do
   use Rack::CommonLogger, logger
 end
 
+# Environment configuration
 configure :development, :production do
-
-  #set :database, { adapter: "sqlite3", database: "foo.sqlite3" }
-
   SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
     config.host = 'redis'
   end
 end
 
 configure :test do
-
-  #set :database, { adapter: "sqlite3", database: "foo.sqlite3" }
-
   SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
     config.mock = true
   end
-
 end
+
+# Register services
+ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
+  SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
+    SimpleEventSourcing::Events::EventStore::RedisClient.get_client
+  )
+)
+
+
 # configure do
 #   # logging is enabled by default in classic style applications,
 #   # so `enable :logging` is not needed

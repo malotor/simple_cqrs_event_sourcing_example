@@ -8,22 +8,19 @@ require 'sinatra/json'
 require_relative './model/employee'
 require_relative './model/employee_repository'
 require_relative './model/employee_view'
-require './environment'
 
+require_relative './lib/service_provider'
 require_relative './lib/json_api_app'
+
+
+require './environment'
 
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorEmployeeEventSubscriber.new)
 #SimpleEventSourcing::Events::EventDispatcher.add_subscriber(CongratulateEmployeeSubscriber.new)
 
 class MyApp < JsonApiApp
 
-  def employee_repository
-      @employee_repository ||= EmployeeRepository.new(
-        SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
-          SimpleEventSourcing::Events::EventStore::RedisClient.get_client
-        )
-      )
-  end
+  include ServiceProvider::ContainerAware
 
   get '/' do
     { foo: 'bar' }.to_json
@@ -44,6 +41,9 @@ class MyApp < JsonApiApp
 
   get '/employee/:id' do
     employee = employee_repository.findById(params[:id])
+
+    halt 204 unless employee
+
     result = []
     result << employee
     result.to_json
