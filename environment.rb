@@ -2,6 +2,19 @@ require "bundler/setup"
 
 Bundler.require(:default, Sinatra::Application.environment)
 
+require_relative './model/employee'
+require_relative './model/employee_repository'
+require_relative './model/employee_view'
+
+require_relative './lib/service_provider'
+require_relative './lib/json_api_app'
+require_relative './lib/command_bus/commands/commands'
+require_relative './lib/command_bus/command_handlers/command_handlers'
+
+require 'arkency/command_bus'
+require 'arkency/command_bus/alias'
+
+
 # module Logging
 #
 #   # This is the magical bit that gets mixed into your classes
@@ -58,4 +71,15 @@ ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
   SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
     ServiceProvider::Container[:redis_client]
   )
+)
+
+# Event dispatcher
+SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorEmployeeEventSubscriber.new)
+
+
+# Command buss
+ServiceProvider::Container[:command_bus] = CommandBus.new
+ServiceProvider::Container[:command_bus].register(CreateEmployeeCommand, -> (command) {
+  CreateEmployeeCommandHandler.new(ServiceProvider::Container[:employee_repository]).handle(command)
+  }
 )

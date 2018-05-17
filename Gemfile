@@ -7,7 +7,7 @@ gem 'simple_event_sourcing', '~> 1.0.1'
 gem 'bundler'
 gem 'redis'
 gem 'pg'
-
+gem 'arkency-command_bus'
 
 group :development do
     gem 'pry'

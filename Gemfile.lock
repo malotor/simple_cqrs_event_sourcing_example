@@ -15,6 +15,8 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
+    arkency-command_bus (0.4.0)
+      thread_safe
     backports (3.11.3)
     bond (0.5.1)
     byebug (10.0.2)
@@ -117,6 +119,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  arkency-command_bus
   bundler
   capybara
   database_cleaner
