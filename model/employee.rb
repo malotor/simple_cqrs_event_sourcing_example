@@ -37,13 +37,15 @@ class ProjectorEmployeeEventSubscriber < SimpleEventSourcing::Events::EventSubsc
   end
 
   def handle(event)
-    #logger.info "hoo"
-    db = SQLite3::Database.open "db/development.sqlite3"
-    case event.class
+    log = ServiceProvider::Container[:log]
+    #db = SQLite3::Database.open "db/development.sqlite3"
+    db = ActiveRecord::Base.connection
+    log.debug "Projecting Event: #{event.inspect}"
+    case event
     when NewEmployeeIsHiredEvent
-      db.execute("INSERT INTO employee_views(uuid, name, title , salary) VALUES (?,?,?,?)", [event.aggregate_id, event.name, event.title, event.salary.to_i])
+      db.execute("INSERT INTO employee_views(uuid, name, title , salary) VALUES ('#{event.aggregate_id}','#{event.name}','#{event.title}',#{event.salary.to_i})")
     when SalaryHasChangedEvent
-      db.execute("UPDATE employee_views SET salary = ?  WHERE uuid = ?", [event.new_salary.to_i, event.aggregate_id])
+      db.execute("UPDATE employee_views SET salary = ?  WHERE uuid = '?'", [event.new_salary.to_i, event.aggregate_id])
     end
   end
 end
@@ -75,7 +77,7 @@ class Employee
 
   attr_reader :name, :title, :salary
 
-  def salary=(new_salary)
+  def promote(new_salary)
     apply_record_event SalaryHasChangedEvent , new_salary: new_salary
   end
 

@@ -30,8 +30,11 @@ Dir.mkdir("log") unless File.exist?("log")
 logger = File.new("log/#{settings.environment}.log", 'a+')
 logger.sync = true
 
+
+ServiceProvider::Container[:log] = Logger.new(STDOUT)
+
 configure do
-  use Rack::CommonLogger, logger
+  use Rack::CommonLogger, ServiceProvider::Container[:log]
 end
 
 # Environment configuration
@@ -48,32 +51,11 @@ configure :test do
 end
 
 # Register services
+
+ServiceProvider::Container[:redis_client] = SimpleEventSourcing::Events::EventStore::RedisClient.get_client
+
 ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
   SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
-    SimpleEventSourcing::Events::EventStore::RedisClient.get_client
+    ServiceProvider::Container[:redis_client]
   )
 )
-
-
-# configure do
-#   # logging is enabled by default in classic style applications,
-#   # so `enable :logging` is not needed
-#   Dir.mkdir("log") unless File.exist?("log")
-#   file = File.new("log/#{settings.environment}.log", 'a+')
-#   file.sync = true
-#   use Rack::CommonLogger, file
-# end
-
-# if ENV['RACK_ENV'] == 'test'
-#   #set :database, { adapter: "sqlite3", database: "foo.sqlite3" }
-#   SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
-#     config.mock = true
-#   end
-# else
-#   #set :database, { adapter: "sqlite3", database: "foo.sqlite3" }
-#
-# end
-
-# configure :production, :test do
-#   ...
-# end

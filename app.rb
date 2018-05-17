@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] ||= 'development'
+
 require 'sinatra'
 require 'json'
 require 'simple_event_sourcing'
@@ -34,19 +36,13 @@ class MyApp < JsonApiApp
   post '/employee' do
     new_employee = Employee.create(params['name'], params['title'], params['salary'].to_i)
     employee_repository.save new_employee
-    result = []
-    result << new_employee
-    result.to_json
+    new_employee.to_json
   end
 
   get '/employee/:id' do
     employee = employee_repository.findById(params[:id])
-
     halt 204 unless employee
-
-    result = []
-    result << employee
-    result.to_json
+    employee.to_json
   end
 
 

@@ -7,7 +7,7 @@ RSpec.describe 'An employee repository' do
 
   before(:each) do
     @fred = Employee.create('Fred Flintstone', 'Crane Operator', 30_000.0)
-    @fred.salary = 35_000
+    @fred.promote 35_000
     @employee_repository = EmployeeRepository.new(
       SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
         SimpleEventSourcing::Events::EventStore::RedisClient.get_client
@@ -35,7 +35,7 @@ RSpec.describe 'An employee repository' do
     expect(recovered_employee.title).to eq 'Crane Operator'
     expect(recovered_employee.salary).to eq 35_000
 
-    recovered_employee.salary = 40_000
+    recovered_employee.promote 40_000
 
     @employee_repository.save recovered_employee
 
