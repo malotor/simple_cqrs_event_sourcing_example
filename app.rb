@@ -18,7 +18,6 @@ require_relative './lib/json_api_app'
 require './environment'
 
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorEmployeeEventSubscriber.new)
-#SimpleEventSourcing::Events::EventDispatcher.add_subscriber(CongratulateEmployeeSubscriber.new)
 
 class MyApp < JsonApiApp
 
@@ -29,8 +28,9 @@ class MyApp < JsonApiApp
   end
 
   get '/employee' do
-    @employees = EmployeeView.all
-    @employees.to_json
+    employees = EmployeeView.all
+    halt 204 unless employees
+    employees.to_json
   end
 
   post '/employee' do
@@ -41,7 +41,7 @@ class MyApp < JsonApiApp
 
   get '/employee/:id' do
     employee = employee_repository.findById(params[:id])
-    halt 204 unless employee
+    halt 404 unless employee
     employee.to_json
   end
 
