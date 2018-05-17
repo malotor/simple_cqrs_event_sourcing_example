@@ -20,7 +20,8 @@ class MyApp < JsonApiApp
   end
 
   get '/employee' do
-    employees = EmployeeView.all
+    #employees = EmployeeView.all
+    employees = ServiceProvider::Container[:command_bus].(AllEmployeesQuery.new)
     halt 204 unless employees
     employees.to_json
   end
@@ -33,7 +34,8 @@ class MyApp < JsonApiApp
   end
 
   get '/employee/:id' do
-    employee = employee_repository.findById(params[:id])
+    #employee = employee_repository.findById(params[:id])
+    employee = ServiceProvider::Container[:command_bus].(EmployeesDetailsQuery.new(employee_id: params[:id]))
     halt 404 unless employee
     employee.to_json
   end

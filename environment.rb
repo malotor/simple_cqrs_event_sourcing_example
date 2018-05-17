@@ -83,3 +83,11 @@ ServiceProvider::Container[:command_bus].register(CreateEmployeeCommand, -> (com
   CreateEmployeeCommandHandler.new(ServiceProvider::Container[:employee_repository]).handle(command)
   }
 )
+ServiceProvider::Container[:command_bus].register(AllEmployeesQuery, -> (query) {
+  AllEmployeesQueryHandler.new.handle(query)
+  }
+)
+ServiceProvider::Container[:command_bus].register(EmployeesDetailsQuery, -> (query) {
+  EmployeesDetailsQueryHandler.new.handle(query)
+  }
+)

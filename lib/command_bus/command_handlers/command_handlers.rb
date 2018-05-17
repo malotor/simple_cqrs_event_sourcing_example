@@ -16,15 +16,15 @@ class PromoteEmployeeCommandHandler
   end
 end
 
-class AllEmployeesQuery
+class AllEmployeesQueryHandler
   def handle(query = nil)
     EmployeeView.all
   end
 end
 
-class EmployeesDetailsQuery
+class EmployeesDetailsQueryHandler
 
   def handle(query)
-    @query = query
+    EmployeeView.find_by(uuid: query.employee_id)
   end
 end
