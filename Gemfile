@@ -8,6 +8,7 @@ gem 'bundler'
 gem 'redis'
 gem 'pg'
 gem 'arkency-command_bus'
+gem 'elasticsearch'
 
 group :development do
     gem 'pry'
