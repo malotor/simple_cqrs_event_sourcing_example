@@ -1,6 +1,6 @@
 RSpec.describe 'An employee' do
   before(:each) do
-    @fred = Employee.create('Fred Flintstone', 'Crane Operator', 30_000.0)
+    @fred = Employee.create('8aa14c4f-5244-43f7-a2ba-f83c1327d669', 'Fred Flintstone', 'Crane Operator', 30_000.0)
 
     @subscribers = []
     @subscribers << spy(:spy_subscriber)
@@ -13,6 +13,10 @@ RSpec.describe 'An employee' do
 
   after(:each) do
     @subscribers.each { |s| SimpleEventSourcing::Events::EventDispatcher.delete_subscriber(s) }
+  end
+
+  it 'has an id' do
+    expect(@fred.id).to eq '8aa14c4f-5244-43f7-a2ba-f83c1327d669'
   end
 
   it 'has a name and title' do

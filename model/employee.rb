@@ -29,16 +29,14 @@ class SalaryHasChangedEvent < SimpleEventSourcing::Events::Event
   end
 end
 
-
 class ProjectorEmployeeEventSubscriber < SimpleEventSourcing::Events::EventSubscriber
-
-  def is_subscribet_to?(event)
+  def is_subscribet_to?(_event)
     true
   end
 
   def handle(event)
     log = ServiceProvider::Container[:log]
-    #db = SQLite3::Database.open "db/development.sqlite3"
+    # db = SQLite3::Database.open "db/development.sqlite3"
     db = ActiveRecord::Base.connection
     log.debug "Projecting Event: #{event.inspect}"
     case event
@@ -56,7 +54,7 @@ class CongratulateEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscri
   end
 
   def handle(event)
-    #puts "Cogratulations for your new salary => #{event.new_salary}!!!!"
+    # puts "Cogratulations for your new salary => #{event.new_salary}!!!!"
   end
 end
 
@@ -66,7 +64,7 @@ class WelcomeEmployeeSubscriber < SimpleEventSourcing::Events::EventSubscriber
   end
 
   def handle(event)
-    #puts "Wellcome  #{event.name}!!!!"
+    # puts "Wellcome  #{event.name}!!!!"
   end
 end
 
@@ -78,16 +76,16 @@ class Employee
   attr_reader :name, :title, :salary
 
   def promote(new_salary)
-    apply_record_event SalaryHasChangedEvent , new_salary: new_salary
+    apply_record_event SalaryHasChangedEvent, new_salary: new_salary
   end
 
   def self.generate_id(id)
     SimpleEventSourcing::Id::UUIDId.new id
   end
 
-  def self.create(name,title,salary)
+  def self.create(id, name, title, salary)
     employee = new
-    employee.aggregate_id = SimpleEventSourcing::Id::UUIDId.generate
+    employee.aggregate_id = SimpleEventSourcing::Id::UUIDId.new id
     employee.apply_record_event NewEmployeeIsHiredEvent, name: name, title: title, salary: salary
     employee
   end

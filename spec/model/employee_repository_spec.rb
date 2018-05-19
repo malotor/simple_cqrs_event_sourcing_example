@@ -6,7 +6,7 @@ RSpec.describe 'An employee repository' do
   let(:spy_subscriber) { @subscribers[0] }
 
   before(:each) do
-    @fred = Employee.create('Fred Flintstone', 'Crane Operator', 30_000.0)
+    @fred = Employee.create('8aa14c4f-5244-43f7-a2ba-f83c1327d669', 'Fred Flintstone', 'Crane Operator', 30_000.0)
     @fred.promote 35_000
     @employee_repository = EmployeeRepository.new(
       SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
