@@ -26,3 +26,21 @@ class EmployeesDetailsQueryHandler
     EmployeeView.find_by(uuid: query.employee_id)
   end
 end
+
+class FindEmployeesByParamsQueryHandler
+  def handle(query)
+    client = Elasticsearch::Client.new url: 'http://elasticsearch:9200', log: true
+
+    client.transport.reload_connections!
+    client.cluster.health
+
+    query.params.inspect
+
+    response = client.search index: 'employee', body: { query: { match: { name: query.params[:name] } } }
+    result = []
+    response['hits']['hits'].each do |s|
+      result << s['_source']
+    end
+    result
+  end
+end

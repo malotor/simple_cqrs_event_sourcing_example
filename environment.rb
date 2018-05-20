@@ -1,4 +1,4 @@
-require "bundler/setup"
+require 'bundler/setup'
 
 Bundler.require(:default, Sinatra::Application.environment)
 
@@ -13,7 +13,6 @@ require_relative './lib/command_bus/command_handlers/command_handlers'
 
 require 'arkency/command_bus'
 require 'arkency/command_bus/alias'
-
 
 # module Logging
 #
@@ -34,15 +33,12 @@ require 'arkency/command_bus/alias'
 #   end
 # end
 
-#logger = Logger.new(STDOUT)
-
-
+# logger = Logger.new(STDOUT)
 
 # Log
-Dir.mkdir("log") unless File.exist?("log")
+Dir.mkdir('log') unless File.exist?('log')
 logger = File.new("log/#{settings.environment}.log", 'a+')
 logger.sync = true
-
 
 ServiceProvider::Container[:log] = Logger.new(STDOUT)
 
@@ -76,18 +72,24 @@ ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
 # Event dispatcher
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorEmployeeEventSubscriber.new)
 
-
 # Command buss
 ServiceProvider::Container[:command_bus] = CommandBus.new
-ServiceProvider::Container[:command_bus].register(CreateEmployeeCommand, -> (command) {
-  CreateEmployeeCommandHandler.new(ServiceProvider::Container[:employee_repository]).handle(command)
-  }
-)
-ServiceProvider::Container[:command_bus].register(AllEmployeesQuery, -> (query) {
-  AllEmployeesQueryHandler.new.handle(query)
-  }
-)
-ServiceProvider::Container[:command_bus].register(EmployeesDetailsQuery, -> (query) {
-  EmployeesDetailsQueryHandler.new.handle(query)
-  }
-)
+ServiceProvider::Container[:command_bus].register(CreateEmployeeCommand, lambda { |command|
+                                                                           CreateEmployeeCommandHandler.new(ServiceProvider::Container[:employee_repository]).handle(command)
+                                                                         })
+ServiceProvider::Container[:command_bus].register(AllEmployeesQuery, lambda { |query|
+                                                                       AllEmployeesQueryHandler.new.handle(query)
+                                                                     })
+ServiceProvider::Container[:command_bus].register(EmployeesDetailsQuery, lambda { |query|
+                                                                           EmployeesDetailsQueryHandler.new.handle(query)
+                                                                         })
+
+ServiceProvider::Container[:command_bus].register(FindEmployeesByParamsQuery, lambda { |query|
+                                                                                FindEmployeesByParamsQueryHandler.new.handle(query)
+                                                                              })
+
+# Elasticsearch Client
+ServiceProvider::Container[:elasticsearch] = Elasticsearch::Client.new url: 'http://elasticsearch:9200', log: true
+
+# client.transport.reload_connections!
+# client.cluster.health

@@ -18,6 +18,13 @@ end
 
 class AllEmployeesQuery; end
 
+class FindEmployeesByParamsQuery
+  attr_accessor :params
+  def initialize(args)
+    @params = args[:params]
+  end
+end
+
 class EmployeesDetailsQuery
   attr_accessor :employee_id
   def initialize(args)

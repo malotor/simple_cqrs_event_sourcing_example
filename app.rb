@@ -16,12 +16,13 @@ class MyApp < JsonApiApp
     ServiceProvider::Container[:command_bus]
   end
 
-  get '/' do
-    { foo: 'bar' }.to_json
-  end
-
   get '/employee' do
-    employees = command_bus.call(AllEmployeesQuery.new)
+    params.select! { |k| %i[title name salary].include? k }
+    employees = if params.empty?
+                  command_bus.call(AllEmployeesQuery.new)
+                else
+                  command_bus.call(FindEmployeesByParamsQuery.new(params))
+                end
     halt 204 unless employees
     employees.to_json
   end

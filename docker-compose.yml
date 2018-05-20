@@ -35,3 +35,9 @@ services:
         hard: -1
     ports:
       - 9200:9200
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.4
+    environment:
+      SERVER_NAME: kibana.example.org
+    ports:
+      - 5601:5601  
