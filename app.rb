@@ -12,9 +12,9 @@ require './environment'
 class MyApp < JsonApiApp
   include ServiceProvider::ContainerAware
 
-  def command_bus
-    ServiceProvider::Container[:command_bus]
-  end
+  # def command_bus
+  #   ServiceProvider::Container[:command_bus]
+  # end
 
   get '/employee' do
     params.select! { |k| %i[title name salary].include? k }

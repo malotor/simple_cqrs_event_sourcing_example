@@ -7,6 +7,15 @@ describe 'Employee API' do
     expect(response_data['name']).to eq('Any Name')
     expect(response_data['title']).to eq('Any Title')
     expect(response_data['salary']).to eq(45_000)
+
+    get "/employee/8aa14c4f-5244-43f7-a2ba-f83c1327d669"
+    response_data = JSON.parse(last_response.body)
+    expect(last_response).to be_ok
+    expect(last_response.content_type).to eq('application/json')
+    expect(response_data['name']).to eq('Any Name')
+    expect(response_data['title']).to eq('Any Title')
+    expect(response_data['salary']).to eq(45_000)
+
   end
 
   it 'return an employee details' do
@@ -15,13 +24,14 @@ describe 'Employee API' do
     barney = Employee.create('8aa14c4f-5244-43f7-a2ba-f83c1327d669', 'Barney Rubble', 'Crane Operator', 10_000.0)
     employee_repository.save barney
 
-    get "/employee/#{barney.id}"
+    get "/employee/8aa14c4f-5244-43f7-a2ba-f83c1327d669"
     response_data = JSON.parse(last_response.body)
     expect(last_response).to be_ok
     expect(last_response.content_type).to eq('application/json')
     expect(response_data['name']).to eq('Barney Rubble')
     expect(response_data['title']).to eq('Crane Operator')
     expect(response_data['salary']).to eq(10_000)
+
   end
 
   it 'return an all employees' do

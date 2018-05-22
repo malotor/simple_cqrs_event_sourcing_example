@@ -20,14 +20,23 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
+
+    #redis.flushall
+  end
+
+  config.after(:suite) do
+    #DatabaseCleaner.clean
+    #ServiceProvider::Container[:elasticsearch].delete_by_query index: 'myindex', body: { query: { match_all: {} } }
   end
 
   config.before(:each) do
-    DatabaseCleaner.start
+     DatabaseCleaner.start
+     #ServiceProvider::Container[:elasticsearch].reset
+     #ServiceProvider::Container[:redis_client].flushall
   end
-
+  #
   config.after(:each) do
-    DatabaseCleaner.clean
+     DatabaseCleaner.clean
   end
 
   config.expect_with :rspec do |expectations|

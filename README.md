@@ -17,3 +17,12 @@ This is a example of how to use the Simple Event Sourcing gem [https://rubygems.
 sudo sysctl -w vm.max_map_count=262144
 
 curl -i -XGET http://localhost:9200/website/blog/124?pretty
+
+
+# Redis UI
+
+  http://localhost:50000
+
+# kibana
+
+  http://localhost:5601/

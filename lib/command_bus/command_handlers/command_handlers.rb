@@ -29,14 +29,14 @@ end
 
 class FindEmployeesByParamsQueryHandler
   def handle(query)
-    client = Elasticsearch::Client.new url: 'http://elasticsearch:9200', log: true
+    client = ServiceProvider::Container[:elasticsearch]
 
-    client.transport.reload_connections!
-    client.cluster.health
+    log = ServiceProvider::Container[:log]
+    log.debug query.params.inspect
 
-    query.params.inspect
-
-    response = client.search index: 'employee', body: { query: { match: { name: query.params[:name] } } }
+    #response = client.search index: 'employee', body: { query: { match: { name: query.params[:name] } } }
+    response = client.search query.params
+    log.debug response.inspect
     result = []
     response['hits']['hits'].each do |s|
       result << s['_source']
