@@ -28,19 +28,12 @@ class EmployeesDetailsQueryHandler
 end
 
 class FindEmployeesByParamsQueryHandler
+include ServiceProvider::ContainerAware
+  
   def handle(query)
-    client = ServiceProvider::Container[:elasticsearch]
-
-    log = ServiceProvider::Container[:log]
-    log.debug query.params.inspect
-
-    #response = client.search index: 'employee', body: { query: { match: { name: query.params[:name] } } }
-    response = client.search query.params
-    log.debug response.inspect
-    result = []
-    response['hits']['hits'].each do |s|
-      result << s['_source']
-    end
-    result
+    # client = ServiceProvider::Container[:elasticsearch]
+    response = elasticsearch.search query.params
+    log.debug 'RESPONSE:' + response.inspect
+    response
   end
 end

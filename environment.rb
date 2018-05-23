@@ -16,7 +16,6 @@ require 'arkency/command_bus/alias'
 
 require_relative './lib/elasticsearch/employee_client'
 
-
 configure do
   enable :logging
   # Log
@@ -26,7 +25,6 @@ configure do
 
   use Rack::CommonLogger, logger
   ServiceProvider::Container[:log] = Logger.new(logger)
-
 end
 
 # Environment configuration
@@ -38,7 +36,7 @@ end
 
 configure :test do
   SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
-    #config.mock = true
+    # config.mock = true
     config.host = 'redis'
   end
 end
@@ -57,30 +55,24 @@ ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorEmployeeEventSubscriber.new)
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorElasticEmployeeEventSubscribe.new)
 
-
 # Command buss
 ServiceProvider::Container[:command_bus] = CommandBus.new
-ServiceProvider::Container[:command_bus].register(CreateEmployeeCommand, lambda { |command|
-                                                                           CreateEmployeeCommandHandler.new(ServiceProvider::Container[:employee_repository]).handle(command)
-                                                                         })
-ServiceProvider::Container[:command_bus].register(AllEmployeesQuery, lambda { |query|
-                                                                       AllEmployeesQueryHandler.new.handle(query)
-                                                                     })
-ServiceProvider::Container[:command_bus].register(EmployeesDetailsQuery, lambda { |query|
-                                                                           EmployeesDetailsQueryHandler.new.handle(query)
-                                                                         })
-
-ServiceProvider::Container[:command_bus].register(FindEmployeesByParamsQuery, lambda { |query|
-                                                                                FindEmployeesByParamsQueryHandler.new.handle(query)
-                                                                              })
+bus = ServiceProvider::Container[:command_bus]
+bus.register(CreateEmployeeCommand, lambda { |command|
+                                      CreateEmployeeCommandHandler.new(ServiceProvider::Container[:employee_repository]).handle(command)
+                                    })
+bus.register(AllEmployeesQuery, lambda { |query|
+                                  AllEmployeesQueryHandler.new.handle(query)
+                                })
+bus.register(EmployeesDetailsQuery, lambda { |query|
+                                      EmployeesDetailsQueryHandler.new.handle(query)
+                                    })
+bus.register(FindEmployeesByParamsQuery, lambda { |query|
+                                           FindEmployeesByParamsQueryHandler.new.handle(query)
+                                         })
 
 # Elasticsearch Client
 elasticsearch_client = Elasticsearch::Client.new url: 'http://elasticsearch:9200', log: true
 ServiceProvider::Container[:elasticsearch] = EmployeeClient.new(elasticsearch_client)
-ServiceProvider::Container[:elasticsearch].client.transport.reload_connections!
-ServiceProvider::Container[:elasticsearch].client.cluster.health
-
-
-
-# client.transport.reload_connections!
-# client.cluster.health
+# ServiceProvider::Container[:elasticsearch].client.transport.reload_connections!
+# ServiceProvider::Container[:elasticsearch].client.cluster.health

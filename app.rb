@@ -15,13 +15,15 @@ class MyApp < JsonApiApp
   # def command_bus
   #   ServiceProvider::Container[:command_bus]
   # end
-
+  def filtered_params
+    params.select { |k| %w[title name salary].include? k }
+  end
   get '/employee' do
-    params.select! { |k| %i[title name salary].include? k }
-    employees = if params.empty?
+    log.debug '[PARAMS]' + filtered_params.inspect
+    employees = if filtered_params.empty?
                   command_bus.call(AllEmployeesQuery.new)
                 else
-                  command_bus.call(FindEmployeesByParamsQuery.new(params))
+                  command_bus.call(FindEmployeesByParamsQuery.new(filtered_params))
                 end
     halt 204 unless employees
     employees.to_json
