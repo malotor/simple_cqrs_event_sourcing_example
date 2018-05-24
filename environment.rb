@@ -1,3 +1,11 @@
+ENV['RACK_ENV'] ||= 'development'
+
+require 'sinatra'
+require 'json'
+require 'simple_event_sourcing'
+require 'sqlite3'
+require 'sinatra/activerecord'
+require 'sinatra/json'
 require 'bundler/setup'
 
 Bundler.require(:default, Sinatra::Application.environment)
@@ -5,21 +13,24 @@ Bundler.require(:default, Sinatra::Application.environment)
 require 'arkency/command_bus'
 require 'arkency/command_bus/alias'
 
-Dir["#{File.dirname(__FILE__)}/lib/*.rb"].each {|file| require file }
-Dir["#{File.dirname(__FILE__)}/lib/**/*.rb"].each {|file| require file }
-#Dir["#{File.dirname(__FILE__)}/model/**/*.rb"].each {|file| require file }
 require_relative './model/employee/employee_events'
 require_relative './model/employee/employee_event_subscribers'
 require_relative './model/employee/employee'
 require_relative './model/employee/employee_repository'
 require_relative './model/employee_view'
 #
-# require_relative './lib/service_provider'
-# require_relative './lib/json_api_app'
-# require_relative './lib/command_bus/commands/commands'
-# require_relative './lib/command_bus/command_handlers/command_handlers'
+require_relative './lib/service_provider'
+require_relative './lib/json_api_app'
 
-#require_relative './lib/elasticsearch/employee_client'
+require_relative './lib/command_bus/commands'
+require_relative './lib/command_bus/command_handlers'
+require_relative './lib/command_bus/querys'
+require_relative './lib/command_bus/query_handlers'
+
+require_relative './lib/elasticsearch/employee_client'
+
+require_relative './lib/projections/projection'
+Dir["#{File.dirname(__FILE__)}/lib/projections/*_projection.rb"].each {|file| require file }
 
 configure do
   enable :logging
@@ -58,7 +69,6 @@ ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
 
 # Event dispatcher
 SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorEmployeeEventSubscriber.new)
-SimpleEventSourcing::Events::EventDispatcher.add_subscriber(ProjectorElasticEmployeeEventSubscribe.new)
 
 # Command buss
 ServiceProvider::Container[:command_bus] = CommandBus.new

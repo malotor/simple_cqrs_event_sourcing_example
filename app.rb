@@ -1,20 +1,9 @@
-ENV['RACK_ENV'] ||= 'development'
-
-require 'sinatra'
-require 'json'
-require 'simple_event_sourcing'
-require 'sqlite3'
-require 'sinatra/activerecord'
-require 'sinatra/json'
 
 require './environment'
 
 class MyApp < JsonApiApp
   include ServiceProvider::ContainerAware
 
-  # def command_bus
-  #   ServiceProvider::Container[:command_bus]
-  # end
   def filtered_params
     params.select { |k| %w[title name salary].include? k }
   end

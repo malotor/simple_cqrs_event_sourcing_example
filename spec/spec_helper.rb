@@ -1,9 +1,7 @@
 ENV['RACK_ENV'] = 'test'
 
-require 'sinatra'
 require 'rspec'
 require 'rack/test'
-require 'bundler/setup'
 require 'database_cleaner'
 
 require File.expand_path '../app.rb', __dir__
@@ -23,14 +21,9 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
-
-    # redis.flushall
   end
 
-  config.after(:suite) do
-    # DatabaseCleaner.clean
-    # ServiceProvider::Container[:elasticsearch].delete_by_query index: 'myindex', body: { query: { match_all: {} } }
-  end
+  config.after(:suite) do; end
 
   config.before(:each) do
     DatabaseCleaner.start
@@ -51,6 +44,4 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
-
-  config.shared_context_metadata_behavior = :apply_to_host_groups
 end

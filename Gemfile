@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-gem 'sinatra'
+gem 'sinatra', require: ['sinatra', 'sinatra/json']
 gem 'sinatra-contrib'
-gem 'sinatra-activerecord'
+gem 'sinatra-activerecord', require: 'sinatra/activerecord'
 gem 'simple_event_sourcing', '~> 1.0.1'
 gem 'bundler'
-gem 'redis'
-gem 'pg'
-gem 'arkency-command_bus'
+gem 'json'
+gem "sqlite3"
+gem 'arkency-command_bus', require: ['arkency/command_bus', 'arkency/command_bus/alias']
 gem 'elasticsearch'
 
 group :development do
@@ -16,7 +16,7 @@ group :development do
     gem 'thin'
     gem 'shotgun'
     gem 'tux'
-    gem "sqlite3"
+
     gem "rake"
 end
 
