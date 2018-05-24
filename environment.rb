@@ -91,3 +91,10 @@ elasticsearch_client = Elasticsearch::Client.new url: 'http://elasticsearch:9200
 ServiceProvider::Container[:elasticsearch] = EmployeeClient.new(elasticsearch_client)
 ServiceProvider::Container[:elasticsearch].client.transport.reload_connections!
 ServiceProvider::Container[:elasticsearch].client.cluster.health
+
+# Projections
+
+Projector.register([
+  DbProjection.new,
+  ElasticsearchProjection.new
+])

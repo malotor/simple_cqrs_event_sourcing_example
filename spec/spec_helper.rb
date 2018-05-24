@@ -16,8 +16,6 @@ end
 RSpec.configure do |config|
   config.include RSpecMixin
 
-  config.treat_symbols_as_metadata_keys_with_true_values = true
-
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)

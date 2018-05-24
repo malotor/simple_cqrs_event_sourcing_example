@@ -4,9 +4,9 @@ class ProjectorEmployeeEventSubscriber < SimpleEventSourcing::Events::EventSubsc
   end
 
   def handle(event)
-    DbProjection.new.project_event(event)
-    ElasticsearchProjection.new.project_event(event)
-
+    #DbProjection.new.project_event(event)
+    #ElasticsearchProjection.new.project_event(event)
+    Projector.project(event)
   end
 end
 

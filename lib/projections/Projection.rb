@@ -19,23 +19,18 @@ module Projection
   end
 
 end
-#
-# class EventsProjector
-#
-#   def initialize(projections)
-#     @projections = projections
-#   end
-#
-#   project NewEmployeeIsHiredEvent do |event|
-#     @projections.each do |p|
-#       p.new_employee_is_hired event
-#     end
-#   end
-#
-#   project SalaryHasChangedEvent do |event|
-#     @projections.each do |p|
-#       p.salary_has_changed event
-#     end
-#   end
-#
-# end
+
+class Projector
+
+  @@projections = []
+
+  def self.register(args)
+    @@projections.concat args if args.kind_of?(Array)
+    @@projections << args unless args.kind_of?(Array)
+  end
+
+  def self.project(event)
+    @@projections.each { |projection| projection.project_event(event) }
+  end
+
+end
