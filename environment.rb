@@ -13,11 +13,11 @@ Bundler.require(:default, Sinatra::Application.environment)
 require 'arkency/command_bus'
 require 'arkency/command_bus/alias'
 
-require_relative './model/employee/employee_events'
-require_relative './model/employee/employee_event_subscribers'
-require_relative './model/employee/employee'
-require_relative './model/employee/employee_repository'
-require_relative './model/employee_view'
+require_relative './app/model/employee/employee_events'
+require_relative './app/model/employee/employee_event_subscribers'
+require_relative './app/model/employee/employee'
+require_relative './app/model/employee/employee_repository'
+require_relative './app/model/employee_view'
 #
 require_relative './lib/service_provider'
 
