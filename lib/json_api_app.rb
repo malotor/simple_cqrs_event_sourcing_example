@@ -1,6 +1,10 @@
 class JsonApiApp < Sinatra::Base
   register Sinatra::ActiveRecordExtension
 
+  include ServiceProvider::ContainerAware
+
+  use DefaultController
+
   # Run the following before every API request
   before do
     content_type :json
@@ -30,4 +34,5 @@ class JsonApiApp < Sinatra::Base
     #action_log.insert(@actlogpassblock)
     {:message => actlogpassblock }.to_json
   end
+
 end

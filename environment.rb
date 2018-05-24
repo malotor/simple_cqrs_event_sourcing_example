@@ -20,7 +20,7 @@ require_relative './model/employee/employee_repository'
 require_relative './model/employee_view'
 #
 require_relative './lib/service_provider'
-require_relative './lib/json_api_app'
+
 
 require_relative './lib/command_bus/commands'
 require_relative './lib/command_bus/command_handlers'
@@ -30,7 +30,14 @@ require_relative './lib/command_bus/query_handlers'
 require_relative './lib/elasticsearch/employee_client'
 
 require_relative './lib/projections/projection'
+
 Dir["#{File.dirname(__FILE__)}/lib/projections/*_projection.rb"].each {|file| require file }
+
+require_relative './lib/base_controller'
+
+Dir["#{File.dirname(__FILE__)}/app/controllers/**/*_controller.rb"].each {|file| require file }
+
+require_relative './lib/json_api_app'
 
 configure do
   enable :logging
