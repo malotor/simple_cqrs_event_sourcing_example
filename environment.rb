@@ -2,19 +2,24 @@ require 'bundler/setup'
 
 Bundler.require(:default, Sinatra::Application.environment)
 
-require_relative './model/employee'
-require_relative './model/employee_repository'
-require_relative './model/employee_view'
-
-require_relative './lib/service_provider'
-require_relative './lib/json_api_app'
-require_relative './lib/command_bus/commands/commands'
-require_relative './lib/command_bus/command_handlers/command_handlers'
-
 require 'arkency/command_bus'
 require 'arkency/command_bus/alias'
 
-require_relative './lib/elasticsearch/employee_client'
+Dir["#{File.dirname(__FILE__)}/lib/*.rb"].each {|file| require file }
+Dir["#{File.dirname(__FILE__)}/lib/**/*.rb"].each {|file| require file }
+Dir["#{File.dirname(__FILE__)}/model/**/*.rb"].each {|file| require file }
+
+
+# require_relative './model/employee'
+# require_relative './model/employee_repository'
+# require_relative './model/employee_view'
+#
+# require_relative './lib/service_provider'
+# require_relative './lib/json_api_app'
+# require_relative './lib/command_bus/commands/commands'
+# require_relative './lib/command_bus/command_handlers/command_handlers'
+
+#require_relative './lib/elasticsearch/employee_client'
 
 configure do
   enable :logging

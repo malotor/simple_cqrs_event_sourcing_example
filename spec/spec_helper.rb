@@ -40,7 +40,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
-  config.before(:example, :type => :elasticsearch) do
+  config.after(:example, :type => :elasticsearch) do
     ServiceProvider::Container[:elasticsearch].reset
   end
 
