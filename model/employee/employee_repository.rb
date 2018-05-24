@@ -1,5 +1,3 @@
-require 'simple_event_sourcing'
-
 class EmployeeRepository
   def initialize(event_store)
     @event_store = event_store

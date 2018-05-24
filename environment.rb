@@ -7,12 +7,12 @@ require 'arkency/command_bus/alias'
 
 Dir["#{File.dirname(__FILE__)}/lib/*.rb"].each {|file| require file }
 Dir["#{File.dirname(__FILE__)}/lib/**/*.rb"].each {|file| require file }
-Dir["#{File.dirname(__FILE__)}/model/**/*.rb"].each {|file| require file }
-
-
-# require_relative './model/employee'
-# require_relative './model/employee_repository'
-# require_relative './model/employee_view'
+#Dir["#{File.dirname(__FILE__)}/model/**/*.rb"].each {|file| require file }
+require_relative './model/employee/employee_events'
+require_relative './model/employee/employee_event_subscribers'
+require_relative './model/employee/employee'
+require_relative './model/employee/employee_repository'
+require_relative './model/employee_view'
 #
 # require_relative './lib/service_provider'
 # require_relative './lib/json_api_app'
