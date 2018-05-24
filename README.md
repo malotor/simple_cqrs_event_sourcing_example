@@ -9,7 +9,7 @@ This is a example of how to use the Simple Event Sourcing gem [https://rubygems.
     $ alias run='docker-compose exec web'
     $ run rake db:migrate
     $ run rake db:migrate RACK_ENV=test
-    $ run rspec
+    $ run rspec --tag integration
     $ run rake -T
     $ run tux
 

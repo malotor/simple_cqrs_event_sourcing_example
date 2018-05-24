@@ -1,8 +1,6 @@
 class JsonApiApp < Sinatra::Base
   register Sinatra::ActiveRecordExtension
 
-
-
   # Run the following before every API request
   before do
     content_type :json

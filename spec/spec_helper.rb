@@ -18,6 +18,8 @@ end
 RSpec.configure do |config|
   config.include RSpecMixin
 
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
@@ -32,11 +34,14 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
-    ServiceProvider::Container[:elasticsearch].reset
     ServiceProvider::Container[:redis_client].flushall
   end
   config.after(:each) do
     DatabaseCleaner.clean
+  end
+
+  config.before(:example, :type => :elasticsearch) do
+    ServiceProvider::Container[:elasticsearch].reset
   end
 
   config.expect_with :rspec do |expectations|

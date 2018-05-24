@@ -1,5 +1,5 @@
 describe 'Employee API' do
-  it 'create an employee' do
+  it 'create an employee', :type => :elasticsearch do
     post '/employee', id: '8aa14c4f-5244-43f7-a2ba-f83c1327d669', name: 'Any Name', title: 'Any Title', salary: 45_000
     response_data = JSON.parse(last_response.body)
     expect(last_response).to be_ok
@@ -17,7 +17,7 @@ describe 'Employee API' do
     expect(response_data['salary']).to eq(45_000)
   end
 
-  it 'return an employee details' do
+  it 'return an employee details', :type => :elasticsearch do
     employee_repository = ServiceProvider::Container[:employee_repository]
 
     barney = Employee.create('8aa14c4f-5244-43f7-a2ba-f83c1327d669', 'Barney Rubble', 'Crane Operator', 10_000.0)
@@ -32,7 +32,7 @@ describe 'Employee API' do
     expect(response_data['salary']).to eq(10_000)
   end
 
-  it 'return an all employees' do
+  it 'return an all employees', :type => :elasticsearch do
     employee_repository = ServiceProvider::Container[:employee_repository]
 
     employee_repository.save Employee.create('8aa14c4f-5244-43f7-a2ba-f83c1327d669', 'Fred Flintstone', 'Crane Operator', 30_000)
@@ -52,7 +52,7 @@ describe 'Employee API' do
     expect(response_data[1]['salary']).to eq(10_000)
   end
 
-  it 'search and employee' do
+  it 'search and employee', :type =>  :elasticsearch do
     employee_repository = ServiceProvider::Container[:employee_repository]
 
     employee_repository.save Employee.create('8aa14c4f-5244-43f7-a2ba-f83c1327d669', 'Fred Flintstone', 'Crane Operator', 30_000)
