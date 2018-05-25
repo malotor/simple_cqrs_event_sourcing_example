@@ -16,7 +16,7 @@ class EmployeeClient
     log.debug 'DATA SEARCH: ' + data.inspect
 
     # response = client.search index: 'myindex', body: { query: { match: { name: 'Fred Flintstone' } } }
-    response = client.search index: 'myindex', q: 'name:Fred Flintstone'
+    response = client.search index: 'myindex', q: "name:#{data['name']}"
     log.debug 'RESPONSE: ' + response.to_s
     result = []
     response['hits']['hits'].each do |s|
