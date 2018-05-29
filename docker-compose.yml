@@ -8,6 +8,9 @@ services:
       - "8080:40000"
     environment:
       - LANG=C.UTF-8
+    depends_on:
+      - elasticsearch
+      - redis
   redis:
     container_name: redis
     image: redis:3.2-alpine
