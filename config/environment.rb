@@ -12,13 +12,13 @@ end
 
 # Environment configuration
 configure :development, :production do
-  SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
+  RedisClient.configure do |config|
     config.host = 'redis'
   end
 end
 
 configure :test do
-  SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
+  RedisClient.configure do |config|
     # config.mock = true
     config.host = 'redis'
   end
@@ -26,10 +26,10 @@ end
 
 # Register services
 
-ServiceProvider::Container[:redis_client] = SimpleEventSourcing::Events::EventStore::RedisClient.get_client
+ServiceProvider::Container[:redis_client] = RedisClient.get_client
 
 ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
-  SimpleEventSourcing::Events::EventStore::RedisEventStore.new(
+  EventStore::RedisEventStore.new(
     ServiceProvider::Container[:redis_client]
   )
 )

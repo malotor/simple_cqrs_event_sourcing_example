@@ -9,6 +9,7 @@ gem 'json'
 gem "sqlite3"
 gem 'arkency-command_bus', require: ['arkency/command_bus', 'arkency/command_bus/alias']
 gem 'elasticsearch'
+gem 'redis'
 
 group :development do
     gem 'pry'
@@ -16,8 +17,8 @@ group :development do
     gem 'thin'
     gem 'shotgun'
     gem 'tux'
-
     gem "rake"
+    gem 'faker'
 end
 
 group :development,:test do

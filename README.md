@@ -12,7 +12,7 @@ This is a example of how to use the Simple Event Sourcing gem [https://rubygems.
     $ run rspec --tag integration
     $ run rake -T
     $ run tux
-
+    $ run rake app:create_fixtures
 
 # Problem with elasticsearch
 

@@ -20,9 +20,10 @@ require_relative './app/model/employee/employee'
 require_relative './app/model/employee_view'
 
 require_relative './app/services/persistence/employee_repository'
-#
-require_relative './lib/service_provider'
 
+# Libs
+require_relative './lib/service_provider'
+require_relative './lib/redis_client'
 
 require_relative './app/command_bus/commands'
 require_relative './app/command_bus/command_handlers'
