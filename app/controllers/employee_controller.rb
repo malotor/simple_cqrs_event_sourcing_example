@@ -7,7 +7,9 @@ class DefaultController < BaseController
   get '/employee' do
     log.debug '[PARAMS]' + filtered_params.inspect
     employees = if filtered_params.empty?
-                  command_bus.call(AllEmployeesQuery.new)
+                  page =  params.fetch(:page,1)
+                  offset =  params.fetch(:offset,10)
+                  command_bus.call(AllEmployeesQuery.new(page,offset))
                 else
                   command_bus.call(FindEmployeesByParamsQuery.new(filtered_params))
                 end

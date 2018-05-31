@@ -10,6 +10,7 @@ gem "sqlite3"
 gem 'arkency-command_bus', require: ['arkency/command_bus', 'arkency/command_bus/alias']
 gem 'elasticsearch'
 gem 'redis'
+gem 'will_paginate'
 
 group :development do
     gem 'pry'

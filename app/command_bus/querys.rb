@@ -1,4 +1,10 @@
-class AllEmployeesQuery; end
+class AllEmployeesQuery;
+  attr_accessor :page,:offset
+  def initialize(page,offset)
+    @page = page
+    @offset = offset
+  end
+end
 
 class FindEmployeesByParamsQuery
   attr_accessor :params

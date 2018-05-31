@@ -1,7 +1,6 @@
 class AllEmployeesQueryHandler
-  def handle(_query = nil)
-
-    DbProjection.new.getAll
+  def handle(query)
+    DbProjection.new.getAll(query.page, query.offset)
   end
 end
 

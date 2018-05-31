@@ -6,9 +6,10 @@ class DbProjection
   def getById(id)
     EmployeeView.find_by(uuid: id)
   end
-  
-  def getAll
-    EmployeeView.all
+
+  def getAll(page,offset)
+    #EmployeeView.all
+    EmployeeView.paginate(:page => page, :per_page => offset)
   end
 
   project NewEmployeeIsHiredEvent do |event|

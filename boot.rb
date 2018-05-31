@@ -7,6 +7,8 @@ require 'sqlite3'
 require 'sinatra/activerecord'
 require 'sinatra/json'
 require 'bundler/setup'
+require 'will_paginate'
+require 'will_paginate/active_record'
 
 Bundler.require(:default, Sinatra::Application.environment)
 
