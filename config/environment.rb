@@ -55,9 +55,10 @@ bus.register(FindEmployeesByParamsQuery, lambda { |query|
 
 # Elasticsearch Client
 elasticsearch_client = Elasticsearch::Client.new url: 'http://elasticsearch:9200', log: true, trace: true, logger: ServiceProvider::Container[:log], tracer: ServiceProvider::Container[:log]
-ServiceProvider::Container[:elasticsearch] = EmployeeClient.new(elasticsearch_client)
-ServiceProvider::Container[:elasticsearch].client.transport.reload_connections!
-ServiceProvider::Container[:elasticsearch].client.cluster.health
+#elasticsearch_client.reload_connections!
+#elasticsearch_client.cluster.health
+
+ServiceProvider::Container[:elasticsearch] = elasticsearch_client
 
 # Projections
 

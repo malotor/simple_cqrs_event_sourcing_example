@@ -1,4 +1,4 @@
-# Simple Event Sourcing example
+# CQRS + Event Sourcing example in Ruby
 
 This is a example of how to use the Simple Event Sourcing gem [https://rubygems.org/gems/simple_event_sourcing].
 
@@ -14,8 +14,7 @@ This is a example of how to use the Simple Event Sourcing gem [https://rubygems.
     $ run tux
     $ run rake app:create_fixtures
 
-# Problem with elasticsearch
-
+# Elasticsearch  
     $ sudo sysctl -w vm.max_map_count=262144
 
 # Redis UI

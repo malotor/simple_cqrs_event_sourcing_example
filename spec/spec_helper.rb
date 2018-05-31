@@ -32,7 +32,7 @@ RSpec.configure do |config|
   end
 
   config.after(:example, :type => :elasticsearch) do
-    ServiceProvider::Container[:elasticsearch].reset
+    ServiceProvider::Container[:elasticsearch].indices.delete index: '_all'
   end
 
   config.expect_with :rspec do |expectations|

@@ -16,7 +16,8 @@ class FindEmployeesByParamsQueryHandler
 
   def handle(query)
     # client = ServiceProvider::Container[:elasticsearch]
-    response = elasticsearch.search query.params
+    #response = elasticsearch.search query.params
+    response = ElasticsearchProjection.new.search query.params
     log.debug 'RESPONSE:' + response.inspect
     response
   end
