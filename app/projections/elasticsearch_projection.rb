@@ -1,6 +1,6 @@
 class ElasticsearchProjection
 
-  attr_accessor :client
+  #attr_accessor :client
 
   include Projection
   include ServiceProvider::ContainerAware

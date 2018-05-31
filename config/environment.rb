@@ -26,6 +26,8 @@ end
 
 # Register services
 
+ServiceProvider::Container[:db] = ActiveRecord::Base.connection
+
 ServiceProvider::Container[:redis_client] = RedisClient.get_client
 
 ServiceProvider::Container[:employee_repository] = EmployeeRepository.new(
