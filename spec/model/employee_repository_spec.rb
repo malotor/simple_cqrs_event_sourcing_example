@@ -1,7 +1,7 @@
 RSpec.describe 'An employee repository' do
-  SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
-    config.mock = true
-  end
+  # SimpleEventSourcing::Events::EventStore::RedisClient.configure do |config|
+  #   config.mock = true
+  # end
 
   let(:spy_subscriber) { @subscribers[0] }
 
